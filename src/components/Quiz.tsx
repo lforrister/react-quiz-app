@@ -2,17 +2,21 @@ import { useState, useEffect } from 'react'
 import '../resources/scss/Quiz.scss'
 import { shuffle, decodeHtml } from '../utils'
 
-export default function Quiz() {
     
-    type QuizItem = {
-        question: string,
-        correct_answer: string,
-        incorrect_answers: string[],
-        selected?: string,
-        shuffledAnswers?: string[]
-        
-    }
+type QuizItem = {
+    question: string,
+    correct_answer: string,
+    incorrect_answers: string[],
+    selected?: string,
+    shuffledAnswers?: string[]
+    
+}
 
+type QuizProps = {
+    onSubmit: (quizData: QuizItem[]) => void
+}
+
+export default function Quiz({ onSubmit }: QuizProps) {
 
     const apiUrl = 'https://opentdb.com/api.php?amount=10'
 
@@ -60,8 +64,7 @@ export default function Quiz() {
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        return quizData
-        console.log('data', quizData)
+        onSubmit(quizData)
     }
 
 
