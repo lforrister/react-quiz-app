@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import '../resources/scss/Quiz.scss'
+import { shuffle, decodeHtml } from '../utils'
 
 export default function Quiz() {
+    
     type QuizItem = {
         question: string,
         correct_answer: string,
@@ -14,7 +16,6 @@ export default function Quiz() {
     const [quizData, setQuizData] = useState<QuizItem[]>([])
 
     useEffect(() => {
-        console.log("loaded!")
         fetchQuizData()
     }, [])
 
@@ -35,6 +36,13 @@ export default function Quiz() {
             })
     }
 
+    function getQuizAnswers(item: QuizItem) {
+        const allAnswers = [...item.incorrect_answers, item.correct_answer]
+        const shuffled = shuffle(allAnswers)
+
+        return shuffled
+    }
+
 
 
     return (
@@ -44,7 +52,17 @@ export default function Quiz() {
                 { quizData.map((item, index) => {
                     return (
                         <div key={index} className="quiz-item">
-                            <h3 className="quiz-question">{item.question}</h3>
+                            <h3 className="quiz-question">{ decodeHtml(item.question)}</h3>
+
+                            <div className="quiz-answers">
+                                { getQuizAnswers(item).map((answer, i) => {
+                                    return (
+                                        <button key={i} className="button button-secondary">
+                                            { decodeHtml(answer) }
+                                        </button>
+                                    )
+                                })}
+                            </div>
                         </div>
                     )
                 })}

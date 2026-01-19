@@ -13,7 +13,7 @@ export default function Start({startQuiz}: ChildProps) {
                 Time to test your knowledge
             </h2>
 
-            <button onClick={startQuiz} className="button-primary">
+            <button onClick={startQuiz} className="button button-primary">
                 Start Quiz
             </button>
       </section>

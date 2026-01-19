@@ -6,8 +6,15 @@
 
 .quiz-question {
     font-family: 'Karla', serif;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 700;
     color:#293264;
     text-align: left;
+}
+
+.quiz-answers {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    padding: 12px 0;
 }

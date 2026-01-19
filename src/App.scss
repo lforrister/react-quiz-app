@@ -5,21 +5,39 @@
   justify-content: center;
   align-items: center;
   text-align: center;
+  padding: 40px;
+}
+
+.button {
+      font-family: 'Inter', sans-serif;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 
 .button-primary {
   background-color: #4D5B9E;
   color: white;
-  font-family: 'Inter', sans-serif;
   padding: 16px 28px;
   border-radius: 15px;
   font-weight: 600;
   font-size: 18px;
   border: none;
   margin-top: 30px;
+}
+
+.button-secondary {
+  background-color: white;
+  border: 1px solid #4D5B9E;
+  border-radius: 10px;
+  color: #293264;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  min-width: 20px;
 
   &:hover {
-    cursor: pointer;
+    background-color: #D6DBF5;
   }
 }
