@@ -12,22 +12,19 @@ type QuizItem = {
     
 }
 
-type QuizProps = {
-    onSubmit: (quizData: QuizItem[]) => void
-}
 
-export default function Quiz({ onSubmit }: QuizProps) {
+export default function Quiz() {
 
     const apiUrl = 'https://opentdb.com/api.php?amount=10'
 
     const [quizData, setQuizData] = useState<QuizItem[]>([])
+    const [submitted, setSubmitted] = useState<boolean>(false)
 
     useEffect(() => {
         fetchQuizData()
     }, [])
 
     function fetchQuizData() {
-        console.log("fetching!")
         fetch(apiUrl)
             .then((response) => {
                 if (!response.ok) {
@@ -36,7 +33,6 @@ export default function Quiz({ onSubmit }: QuizProps) {
                 return response.json()
             })
             .then((data) => {
-                console.log('quiz data', data)
                 const modifiedData = data.results.map((item: QuizItem) => {
                     return {...item, shuffledAnswers: shuffle([...item.incorrect_answers, item.correct_answer])}
                 })
@@ -64,7 +60,53 @@ export default function Quiz({ onSubmit }: QuizProps) {
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        onSubmit(quizData)
+        setSubmitted(true)
+    }
+
+    const answerChoices = (item: QuizItem) => {
+
+            return (
+                item.shuffledAnswers?.map((answer, i) => {
+                    return (
+                        <button 
+                            type="button"
+                            key={i} 
+                            className={getButtonClasses(item, answer)}
+                            onClick={() => selectAnswer(answer, item.question)}
+                        >
+                            { decodeHtml(answer) }
+                        </button>
+                    )
+                })
+            )
+        
+    }
+
+    function getButtonClasses(item: QuizItem, answer: String) {
+
+        if (submitted) {
+            const isCorrect = (() => {
+                if (item.selected === item.correct_answer) {
+                    if (item.selected === answer) {
+                        return true
+                    }
+                }
+
+                return false
+            })
+
+            const isWrong = (() => {
+                if (item.selected !== item.correct_answer) {
+                    if (item.selected === answer) {
+                        return true
+                    }
+                }
+
+                return false
+            })
+            return `button button-primary quiz-submit-button ${isCorrect() ? 'is-correct' : isWrong() ? 'is-wrong' : 'is-disabled'}`
+        }
+        return `button button-primary quiz-submit-button ${item.selected === answer ? 'is-selected' : ''}`
     }
 
 
@@ -79,18 +121,7 @@ export default function Quiz({ onSubmit }: QuizProps) {
                             <h3 className="quiz-question">{ decodeHtml(item.question)}</h3>
 
                             <div className="quiz-answers">
-                                { item.shuffledAnswers?.map((answer, i) => {
-                                    return (
-                                        <button 
-                                            type="button"
-                                            key={i} 
-                                            className={`button button-primary quiz-submit-button ${item.selected === answer ? 'is-selected' : ''}`} 
-                                            onClick={() => selectAnswer(answer, item.question)}
-                                        >
-                                            { decodeHtml(answer) }
-                                        </button>
-                                    )
-                                })}
+                                { answerChoices(item)}
                             </div>
                         </div>
                     )

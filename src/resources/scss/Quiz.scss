@@ -23,4 +23,23 @@
     &.is-selected {
             background-color: #D6DBF5;
     }
+
+    &.is-correct,
+    &.is-disabled,
+    &.is-wrong {
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+
+    &.is-correct {
+        background-color: #94D7A2;
+    }
+
+    &.is-wrong {
+        background-color: #F8BCBC;
+    }
+
+    &.is-disabled {
+        opacity: 70%;
+    }
 }
