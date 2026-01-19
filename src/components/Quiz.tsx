@@ -15,16 +15,20 @@ type QuizItem = {
 
 export default function Quiz() {
 
-    const apiUrl = 'https://opentdb.com/api.php?amount=10'
+    const apiUrl = 'https://opentdb.com/api.php?amount=6'
 
     const [quizData, setQuizData] = useState<QuizItem[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    const correctCount = quizData.filter(item => item.selected === item.correct_answer).length 
 
     useEffect(() => {
         fetchQuizData()
     }, [])
 
     function fetchQuizData() {
+        setIsLoading(true)
         fetch(apiUrl)
             .then((response) => {
                 if (!response.ok) {
@@ -36,12 +40,12 @@ export default function Quiz() {
                 const modifiedData = data.results.map((item: QuizItem) => {
                     return {...item, shuffledAnswers: shuffle([...item.incorrect_answers, item.correct_answer])}
                 })
-                console.log('modified data', modifiedData)
                 setQuizData(modifiedData)
             })
             .catch((error) => {
                 console.error(error)
             })
+            .finally(() => setIsLoading(false))
     }
 
     function selectAnswer(answer: string, question: string) {
@@ -109,11 +113,19 @@ export default function Quiz() {
         return `button button-primary quiz-submit-button ${item.selected === answer ? 'is-selected' : ''}`
     }
 
+    function resetQuiz() {
+        setSubmitted(false)
+        fetchQuizData()
+    }
+
 
 
     return (
         <div className="quiz-container">
-        { quizData?.length ? (
+
+    
+
+        { !isLoading && quizData?.length ? (
             <form onSubmit={handleSubmit}>
                 { quizData.map((item, index) => {
                     return (
@@ -126,10 +138,21 @@ export default function Quiz() {
                         </div>
                     )
                 })}
+                
+                { submitted ? (
+                    <>
+                        <p className="quiz-results">You scored { correctCount } / { quizData.length } correct answers</p>
+                        <button className="button-primary" type="button" onClick={resetQuiz}>
+                            Play Again
+                        </button>
+                    </>
+                ) : (
+                    <button className="button-primary" type="submit">
+                        Check answers
+                    </button>
+                )}
 
-                <button className="button-primary" type="submit">
-                    Check answers
-                </button>
+    
             </form>
 
 
