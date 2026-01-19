@@ -18,3 +18,9 @@
     justify-content: center;
     padding: 12px 0;
 }
+
+.quiz-submit-button {
+    &.is-selected {
+            background-color: #D6DBF5;
+    }
+}

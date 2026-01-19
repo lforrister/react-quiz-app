@@ -20,7 +20,6 @@ export function shuffle<T>(array: T[]): T[] {
  */
 
 export function decodeHtml(html: string) : string {
-    console.log("html", html)
     const txt = document.createElement('textarea')
     txt.innerHTML = html
     return txt.value
